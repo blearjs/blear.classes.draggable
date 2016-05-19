@@ -1,0 +1,59 @@
+{
+  "name": "blear.classes.draggable",
+  "version": "1.0.0",
+  "description": "可拖拽的类",
+  "scripts": {
+    "live": "browser-sync start --config bs-config.js"
+  },
+  "preferGlobal": false,
+  "bin": {},
+  "engines": {
+    "node": ">= 4.0.0",
+    "iojs": ">= 1.0.0"
+  },
+  "main": "src/index.js",
+  "keywords": [
+    "blear",
+    "core",
+    "querystring",
+    "cloudcome",
+    "ydr.me"
+  ],
+  "author": {
+    "name": "cloudcome",
+    "email": "cloudcome@163.com",
+    "url": "http://ydr.me"
+  },
+  "contributors": [],
+  "homepage": "https://github.com/blearjs/blear.classes.draggable",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blearjs/blear.classes.draggable"
+  },
+  "bugs": {
+    "url": "https://github.com/blearjs/blear.classes.draggable/issues"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "blear.classes.events": "1.x",
+    "blear.core.event": "1.x",
+    "blear.core.selector": "1.x",
+    "blear.core.attribute": "1.x",
+    "blear.core.layout": "1.x",
+    "blear.core.modification": "1.x",
+    "bleear.utils.access": "1.x",
+    "bleear.utils.object": "1.x",
+    "bleear.utils.date": "1.x",
+    "bleear.utils.number": "1.x"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-coolie": "^2.0.1",
+    "karma-coverage": "^0.5.5",
+    "karma-coveralls": "^1.1.2",
+    "karma-jasmine": "^0.3.8"
+  },
+  "license": "MIT"
+}
