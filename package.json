@@ -14,8 +14,8 @@
   "main": "src/index.js",
   "keywords": [
     "blear",
-    "core",
-    "querystring",
+    "classes",
+    "draggable",
     "cloudcome",
     "ydr.me"
   ],
