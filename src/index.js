@@ -109,7 +109,7 @@ var Draggable = Events.extend({
         var the = this;
 
         options = object.assign(true, {}, defaults, options);
-        the.Super(the, options);
+        Draggable.parent(the, options);
 
         // init node
         var containerEl = the[_containerEl] = selector.query(options.containerEl)[0];
@@ -401,7 +401,7 @@ var Draggable = Events.extend({
         event.un(the[_containerEl], DRAG_START_EVENT_TYPE, the[_onDragStart]);
         event.un(doc, DRAG_MOVE_EVENT_TYPE, the[_onDragMove]);
         event.un(doc, DRAG_END_EVENT_TYPE, the[_onDragEnd]);
-        the.Super.destroy();
+        Draggable.parent.destroy(the);
     }
 });
 var _containerEl = Draggable.sole();
