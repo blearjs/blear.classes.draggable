@@ -14,10 +14,10 @@ var selector =     require('blear.core.selector');
 var attribute =    require('blear.core.attribute');
 var layout =       require('blear.core.layout');
 var modification = require('blear.core.modification');
-var access =       require('bleear.utils.access');
-var object =       require('bleear.utils.object');
-var date =         require('bleear.utils.date');
-var number =       require('bleear.utils.number');
+var access =       require('blear.utils.access');
+var object =       require('blear.utils.object');
+var date =         require('blear.utils.date');
+var number =       require('blear.utils.number');
 
 var win = window;
 var doc = win.document;
