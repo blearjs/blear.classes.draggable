@@ -89,7 +89,7 @@ var defaults = {
 
 /**
  * @class Draggable
- * @extends EventEmitter
+ * @extends Events
  * @description
  * 元素关系描述
  * ```
@@ -220,7 +220,7 @@ var Draggable = Events.extend({
             });
             meta.originalEvent = ev;
 
-            if (the.emit('dragStart', meta) === false) {
+            if (the.emit('dragStart', object.assign({}, meta)) === false) {
                 the[_onDragEnd](ev);
             }
 
@@ -249,7 +249,7 @@ var Draggable = Events.extend({
                 layout.offsetTop(moveEl, lastOffsetTop = startOffsetTop + meta.deltaY);
             }
 
-            if (the.emit('dragMove', meta) === false) {
+            if (the.emit('dragMove', object.assign({}, meta)) === false) {
                 the[_onDragEnd](ev);
             }
 
@@ -280,7 +280,7 @@ var Draggable = Events.extend({
             meta.endY = ev.clientY;
             meta.endTime = date.now();
             meta.originalEvent = ev;
-            the.emit('dragEnd', meta);
+            the.emit('dragEnd', object.assign({}, meta));
             moveEl = shadow ? shadowEl : null;
             effectedEl = null;
             meta = {
