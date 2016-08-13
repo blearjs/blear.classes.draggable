@@ -172,6 +172,7 @@ var Draggable = Events.extend({
             endX: 0,
             endY: 0
         };
+        var originalMeta = meta;
         var startOffsetLeft = 0;
         var startOffsetTop = 0;
         var lastOffsetLeft = 0;
@@ -278,14 +279,16 @@ var Draggable = Events.extend({
 
             meta.endX = ev.clientX;
             meta.endY = ev.clientY;
+            meta.deltaX = meta.endX - meta.startX;
+            meta.deltaY = meta.endY - meta.startY;
             meta.endTime = date.now();
             meta.originalEvent = ev;
             the.emit('dragEnd', object.assign({}, meta));
             moveEl = shadow ? shadowEl : null;
             effectedEl = null;
-            meta = {
+            meta = object.assign({}, originalMeta, {
                 containerEl: containerEl
-            };
+            });
             dragging = false;
 
             if (the[_hasPreventDefault]) {
