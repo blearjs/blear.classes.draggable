@@ -404,7 +404,7 @@ var Draggable = Events.extend({
         event.un(the[_containerEl], DRAG_START_EVENT_TYPE, the[_onDragStart]);
         event.un(doc, DRAG_MOVE_EVENT_TYPE, the[_onDragMove]);
         event.un(doc, DRAG_END_EVENT_TYPE, the[_onDragEnd]);
-        Draggable.parent.destroy(the);
+        Draggable.invoke('destroy', the);
     }
 });
 var _containerEl = Draggable.sole();
