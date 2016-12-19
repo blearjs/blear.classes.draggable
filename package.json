@@ -1,6 +1,6 @@
 {
   "name": "blear.classes.draggable",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "可拖拽的类",
   "scripts": {
     "live": "browser-sync start --config bs-config.js"
@@ -33,8 +33,7 @@
   "bugs": {
     "url": "https://github.com/blearjs/blear.classes.draggable/issues"
   },
-  "dependencies": {},
-  "peerDependencies": {
+  "dependencies": {
     "blear.classes.events": "1.x",
     "blear.core.event": "1.x",
     "blear.core.selector": "1.x",
@@ -46,6 +45,7 @@
     "blear.utils.date": "1.x",
     "blear.utils.number": "1.x"
   },
+  "peerDependencies": {},
   "devDependencies": {},
   "license": "MIT"
 }
