@@ -129,7 +129,7 @@ var Draggable = Events.extend({
         var effectedEl = null;
         var effectedSelector = options.effectedSelector || containerEl;
         var handleSelector = options.handleSelector || effectedSelector;
-        var fixEvent = function (ev) {
+        var touchEvent = function (ev) {
             var touch0 = null;
             var touch1 = null;
             var length = 0;
@@ -198,7 +198,7 @@ var Draggable = Events.extend({
             }
 
             dragging = true;
-            ev = fixEvent(ev);
+            ev = touchEvent(ev);
             var touch0 = ev.touch0;
             var touch1 = ev.touch1;
             var oe = ev.orginalEvent;
@@ -246,7 +246,7 @@ var Draggable = Events.extend({
                 return;
             }
 
-            ev = fixEvent(ev);
+            ev = touchEvent(ev);
             var touch0 = ev.touch0;
             var touch1 = ev.touch1;
             var oe = ev.orginalEvent;
@@ -282,7 +282,7 @@ var Draggable = Events.extend({
                 return
             }
 
-            ev = fixEvent(ev);
+            ev = touchEvent(ev);
             var touch0 = ev.touch0;
             var touch1 = ev.touch1;
             var oe = ev.orginalEvent;
