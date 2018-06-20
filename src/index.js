@@ -52,6 +52,12 @@ var defaults = {
      */
     shadow: true,
 
+    shadowStyle: {
+        background: '#000',
+        opacity: 0.3,
+        border: '1px solid #eee'
+    },
+
     /**
      * 是否取消默认
      * @type Boolean
@@ -117,13 +123,10 @@ var Draggable = Events.extend({
         var shadow = options.shadow;
         var draggable = options.draggable;
         var shadowEl = modification.create('div', {
-            style: {
+            style: object.assign(options.shadowStyle, {
                 display: 'none',
-                position: 'absolute',
-                background: '#000',
-                opacity: 0.3,
-                border: '1px solid #eee'
-            }
+                position: 'absolute'
+            })
         });
 
         var moveEl = shadow ? shadowEl : null;
