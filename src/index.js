@@ -8,16 +8,16 @@
 
 'use strict';
 
-var Events =       require('blear.classes.events');
-var event =        require('blear.core.event');
-var selector =     require('blear.core.selector');
-var attribute =    require('blear.core.attribute');
-var layout =       require('blear.core.layout');
+var Events = require('blear.classes.events');
+var event = require('blear.core.event');
+var selector = require('blear.core.selector');
+var attribute = require('blear.core.attribute');
+var layout = require('blear.core.layout');
 var modification = require('blear.core.modification');
-var access =       require('blear.utils.access');
-var object =       require('blear.utils.object');
-var date =         require('blear.utils.date');
-var number =       require('blear.utils.number');
+var access = require('blear.utils.access');
+var object = require('blear.utils.object');
+var date = require('blear.utils.date');
+var number = require('blear.utils.number');
 
 var win = window;
 var doc = win.document;
@@ -130,26 +130,31 @@ var Draggable = Events.extend({
         var effectedSelector = options.effectedSelector || containerEl;
         var handleSelector = options.handleSelector || effectedSelector;
         var fixEvent = function (ev) {
-            var firstEv = ev;
+            var touch0 = null;
+            var touch1 = null;
+            var length = 0;
 
-            if (ev.changedTouches && ev.changedTouches.length) {
-                firstEv = ev.changedTouches[0];
+            if (ev.touches && (length = ev.touches.length)) {
+                touch0 = ev.touches[0];
+                touch1 = ev.touches[1];
             }
 
-            if (ev.touches && ev.touches.length) {
-                firstEv = ev.touches[0];
+            if (!touch0 && ev.targetTouches && (length = ev.targetTouches.length)) {
+                touch0 = ev.targetTouches[0];
+                touch1 = ev.targetTouches[1];
             }
 
-            try {
-                object.assign(ev, {
-                    clientX: firstEv.clientX,
-                    clientY: firstEv.clientY
-                });
-            } catch (err) {
-                // ignore
+            if (!touch0 && ev.changedTouches && (length = ev.changedTouches.length)) {
+                touch0 = ev.changedTouches[0];
+                touch1 = ev.changedTouches[1];
             }
 
-            return ev;
+            return {
+                orginalEvent: ev,
+                touch0: touch0 || ev,
+                touch1: touch1 || null,
+                length: length
+            };
         };
         //clientX 设置或获取鼠标指针位置相对于当前窗口的 x 坐标，其中客户区域不包括窗口自身的控件和滚动条。
         //clientY 设置或获取鼠标指针位置相对于当前窗口的 y 坐标，其中客户区域不包括窗口自身的控件和滚动条。
@@ -194,8 +199,11 @@ var Draggable = Events.extend({
 
             dragging = true;
             ev = fixEvent(ev);
-            meta.startX = meta.moveX = ev.clientX;
-            meta.startY = meta.moveY = ev.clientY;
+            var touch0 = ev.touch0;
+            var touch1 = ev.touch1;
+            var oe = ev.orginalEvent;
+            meta.startX = meta.moveX = touch0.clientX;
+            meta.startY = meta.moveY = touch0.clientY;
             meta.startTime = date.now();
             var el = meta.handleEl = this;
             effectedEl = meta.effectedEl = selector.closest(el, effectedSelector)[0];
@@ -219,14 +227,17 @@ var Draggable = Events.extend({
                 touchCallout: 'none',
                 userSelect: 'none'
             });
-            meta.originalEvent = ev;
+            meta.originalEvent = oe;
+            meta.touch0 = touch0;
+            meta.touch1 = touch1;
+            meta.length = ev.length;
 
             if (the.emit('dragStart', object.assign({}, meta)) === false) {
                 the[_onDragEnd](ev);
             }
 
             if (the[_hasPreventDefault]) {
-                ev.preventDefault();
+                oe.preventDefault();
             }
         });
 
@@ -236,11 +247,18 @@ var Draggable = Events.extend({
             }
 
             ev = fixEvent(ev);
-            meta.moveX = ev.clientX;
-            meta.moveY = ev.clientY;
+            var touch0 = ev.touch0;
+            var touch1 = ev.touch1;
+            var oe = ev.orginalEvent;
+
+            meta.moveX = touch0.clientX;
+            meta.moveY = touch0.clientY;
             meta.deltaX = meta.moveX - meta.startX;
             meta.deltaY = meta.moveY - meta.startY;
-            meta.originalEvent = ev;
+            meta.originalEvent = oe;
+            meta.touch0 = touch0;
+            meta.length = ev.length;
+            meta.touch1 = touch1;
 
             if (the[_canHorizontal] && draggable) {
                 layout.offsetLeft(moveEl, lastOffsetLeft = startOffsetLeft + meta.deltaX);
@@ -255,7 +273,7 @@ var Draggable = Events.extend({
             }
 
             if (the[_hasPreventDefault]) {
-                ev.preventDefault();
+                oe.preventDefault();
             }
         });
 
@@ -265,6 +283,9 @@ var Draggable = Events.extend({
             }
 
             ev = fixEvent(ev);
+            var touch0 = ev.touch0;
+            var touch1 = ev.touch1;
+            var oe = ev.orginalEvent;
             attribute.style(htmlEl, {
                 cursor: '',
                 touchCallout: '',
@@ -277,12 +298,18 @@ var Draggable = Events.extend({
                 layout.offsetTop(effectedEl, lastOffsetTop);
             }
 
-            meta.endX = ev.clientX;
-            meta.endY = ev.clientY;
+            // 这里不从 touch0.clientX 上取值的原因是：
+            // 结束后的 clientX 可能与最后一次移动的值有出入
+            // 因此取最后一次移动的值更加科学一些
+            meta.endX = meta.moveX;
+            meta.endY = meta.moveY;
             meta.deltaX = meta.endX - meta.startX;
             meta.deltaY = meta.endY - meta.startY;
             meta.endTime = date.now();
-            meta.originalEvent = ev;
+            meta.originalEvent = oe;
+            meta.touch0 = touch0;
+            meta.touch1 = touch1;
+            meta.length = ev.length;
             the.emit('dragEnd', object.assign({}, meta));
             moveEl = shadow ? shadowEl : null;
             effectedEl = null;
@@ -292,7 +319,7 @@ var Draggable = Events.extend({
             dragging = false;
 
             if (the[_hasPreventDefault]) {
-                ev.preventDefault();
+                oe.preventDefault();
             }
         });
     },
@@ -407,15 +434,16 @@ var Draggable = Events.extend({
         Draggable.invoke('destroy', the);
     }
 });
-var _containerEl = Draggable.sole();
-var _hasPreventDefault = Draggable.sole();
-var _disabled = Draggable.sole();
-var _onDragStart = Draggable.sole();
-var _onDragMove = Draggable.sole();
-var _onDragEnd = Draggable.sole();
-var _canHorizontal = Draggable.sole();
-var _canVertical = Draggable.sole();
-var _zIndex = Draggable.sole();
+var sole = Draggable.sole;
+var _containerEl = sole();
+var _hasPreventDefault = sole();
+var _disabled = sole();
+var _onDragStart = sole();
+var _onDragMove = sole();
+var _onDragEnd = sole();
+var _canHorizontal = sole();
+var _canVertical = sole();
+var _zIndex = sole();
 
 
 Draggable.defaults = defaults;
